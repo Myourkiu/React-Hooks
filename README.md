@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# React Hooks
 
-## Getting Started
+## O que são os React Hooks?
+Os React Hooks são funções que permitem o uso de estados e outras funcionalidades sem a escrita de classes, como eram feitas antigamente. Sendo os principais deles:
+- useState
+- useEffect 
+- useContext
+- useReducer
+- useRef
+- useMemo
+- useCallback
 
-First, run the development server:
+Cada um possui sua função e forma de lidar com as funcionalidades do React. Nos próximos tópicos, mostrará o nome e o uso de cada um deles.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## useState
+
+O useState permite a adição e gerenciamento de estados em componentes funcionais. Em seu uso, criará uma variável, onde possuirá o primeiro valor (value), que será o estado atual da variável e no segundo valor (setValue), que é a função que será chamada para a adição/atualização de estado. No parâmetro da função useState(), será passado o valor inicial.
+
+```
+const [value, setValue] = useState(0)
+console.log(value) //0
+
+setValue(10)
+console.log(value) //10
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Pode-se também passar o tipo do useState, que é uma prática comum em ambiente de desenvolvimento.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+const [value, setValue] = useState<number>(0)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## useEffect
 
-## Learn More
+O useEffect é utilizado para operar em situações que buscam ambientes fora do componente React, como chamadas a API's. Por padrão, ele é iniciado após a renderização do componente e após cada atualização do mesmo. 
 
-To learn more about Next.js, take a look at the following resources:
+### Explicação da sintaxe:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ele é separado em 2 partes, a função e o array de dependências. A função é o que será executado após o efeito ser disparado. Já o array de depêndencias, é onde passa as variáveis que define quando o useEffect será reexecutado, ou seja, quando o valor da depedência alterar, será reexecutado. Caso o array esteja vazio,  o efeito será executado apenas uma vez, após a primeira renderização.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+const [repos, setRepos] = useState([]);
+const githubUrl = 'https://api.github.com/users/Myourkiu/repos'
 
-## Deploy on Vercel
+useEffect(() => {
+    const fetchRepos = async () => {
+      try {
+        const response = await axios.get(githubUrl);
+        setRepos(response.data);
+      } 
+      catch (error) {
+        console.error(error);
+      }
+    };
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    fetchRepos();
+  }, []);
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## useContext
+
