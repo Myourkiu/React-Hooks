@@ -130,3 +130,53 @@ const App = () => {
 ```
 
 Utilizando o useContext, seu código fica mais limpo e mais organizado, facilitando o gerenciamento de estados globais e escalamento do código.
+
+## useReducer
+
+O useReducer é uma alternativa do useState, porém trabalhando com mais de um estado, ou seja, em situações mais complexas, onde precisa manipular vários estados, o useReducer pode ser uma ótima alternativa.
+
+### Explicação da sintaxe:
+Este possui uma sintaxe um pouco mais avançada. Sua escrita pode ser feita da seguinte forma:
+
+```
+const [state, dispatch] = useReducer(reducer,{});
+```
+#### State:
+Este comumente é um conjunto de estados, como são vários, este geralmente vai ser um objeto.
+
+#### Dispatch:
+Este é a função que vai ser executada de acordo com cada state.
+
+#### Reducer:
+Função onde que vai indicar o que vai acontecer a cada dispatch.
+
+#### {}
+Este objeto é onde serão passados os states inciais.
+
+### Função reducer:
+Utilizando um exemplo genérico as ações vão ser diminuir e aumentar um count:
+```
+const reducer = (state, action) => {
+  switch(action.type){
+    case "incrementCount" :
+      return {...state, state.count + 1};
+    case "decreamentCount" : 
+      return {...state, state.count - 1};
+    default:
+      return "mensagem de erro"
+  }
+}
+```
+
+### Chamando o useReducer:
+Será chamado a função dispatch e o tipo da ação, lembrando que ela precisa ser o mesmo nome da função reducer.
+
+```
+//Botão de aumentar o contador
+
+<button onClick={() => dispatch({type: "incrementCount"})}>+</button>
+
+//Botão de diminuir o contador
+
+<button onClick={() => dispatch({type: "decreamentCount"})}>+</button>
+```
