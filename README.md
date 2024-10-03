@@ -36,7 +36,11 @@ O useEffect é utilizado para operar em situações que buscam ambientes fora do
 
 ### Explicação da sintaxe:
 
-Ele é separado em 2 partes, a função e o array de dependências. A função é o que será executado após o efeito ser disparado. Já o array de depêndencias, é onde passa as variáveis que define quando o useEffect será reexecutado, ou seja, quando o valor da depedência alterar, será reexecutado. Caso o array esteja vazio,  o efeito será executado apenas uma vez, após a primeira renderização.
+#### Função:
+A função é o que será executado após o efeito ser disparado.
+
+#### Array de dependências:
+Já o array de depêndencias, é onde passa as variáveis que define quando o useEffect será reexecutado, ou seja, quando o valor da depedência alterar, será reexecutado. Caso o array esteja vazio,  o efeito será executado apenas uma vez, após a primeira renderização.
 
 ```
 const [repos, setRepos] = useState([]);
@@ -59,3 +63,72 @@ useEffect(() => {
 
 ## useContext
 
+O useContext é utilizado para criar um contexto que permite compartilhar valores entre componentes sem acontecer o 'prop drilling', que seria passar props por múltiplos níveis de componentes que não precisam utilizá-la diretamente. Ele geralmente é usado para gerenciar estados globais.
+
+### Explicação da sintaxe:
+
+#### Contexto: 
+Define um valor que pode ser acessado por qualquer componente dentro da sua árvore. Criado pela função React.createContext().
+
+#### Provider:
+Responsável por fornecer o valor do contexto para os componentes, passando via prop 'value'.
+
+#### useContext:
+Utilizado dentro de um componente para acessar o valor fornecido pelo provider. Em seu parâmetro, é passado o contexto necessário.
+
+##### Componente de contexto:
+```
+const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState('light');
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+```
+
+##### Utilização do useContext:
+
+```
+const ThemeToggleButton = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return (
+    <div
+      className={`p-5 ${
+        theme === 'light'
+          ? 'bg-white text-black'
+          : 'bg-gray-800 text-white'
+      }`}
+    >
+      <button
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+        onClick={toggleTheme}
+      >
+        Alternar tema
+      </button>
+    </div>
+  );
+};
+```
+
+##### Envolvendo o componente com provider:
+```
+const App = () => {
+  return (
+    <ThemeProvider>
+      <ThemeToggleButton />
+    </ThemeProvider>
+  );
+};
+```
+
+Utilizando o useContext, seu código fica mais limpo e mais organizado, facilitando o gerenciamento de estados globais e escalamento do código.
