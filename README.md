@@ -151,7 +151,7 @@ Este é a função que vai ser executada de acordo com cada state.
 Função onde que vai indicar o que vai acontecer a cada dispatch.
 
 #### {}
-Este objeto é onde serão passados os states inciais.
+Este objeto é onde serão passados os states iniciais.
 
 ### Função reducer:
 Utilizando um exemplo genérico as ações vão ser diminuir e aumentar um count:
