@@ -180,3 +180,46 @@ Será chamado a função dispatch e o tipo da ação, lembrando que ela precisa 
 
 <button onClick={() => dispatch({type: "decreamentCount"})}>+</button>
 ```
+
+## useRef
+
+O useRef é um criador de referência mutável, ou seja, mesmo após renderizações, ele mantém seu valor. Geralmente usado para manipular elementos DOM, manter um valor entre renderizações sem renderizar o componente novamente e armazenar timeouts e intervalos.
+
+Sua sintaxe é simples, onde criará uma variável e seu parâmetro vai ser o valor inicial.
+
+
+
+```
+const myRef = useRef(null);
+```
+
+#### Considerações importantes:
+- O useRef retorna um objeto com a prop '.current', que pode ser alterada sem causar uma nova renderização.
+
+- É ideal para guardar valores que devem persistir ao longo das renderizações, mas que não precisam atualizar a interface diretamente.
+
+- Todos os elementos HTML possuem uma prop 'ref' que pode ser usado para vincular a referência.
+
+### Manipulação de elementos DOM:
+
+Neste exemplo, o botão terá uma função que, ao clicar, focará no input.
+
+```
+(...)
+const inputRef = userRef<HTMLInputElement>(null);
+
+const handleFocus = () => {
+  if(inputRef.current){
+    inputRef.current.focus();
+  }
+
+  return (
+    (...)
+      <input ref={inputRef} type="text" />
+      <button onClick={handleFocus}>Focus</button>
+  )
+}
+```
+
+### Armazenar um valor entre renderizações:
+
