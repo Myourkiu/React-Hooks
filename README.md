@@ -200,6 +200,8 @@ const myRef = useRef(null);
 
 - Todos os elementos HTML possuem uma prop 'ref' que pode ser usado para vincular a referência.
 
+- Diferente do useState, o useRef não causa re-renderizações quando se é alterado.
+
 ### Manipulação de elementos DOM:
 
 Neste exemplo, o botão terá uma função que, ao clicar, focará no input.
@@ -223,3 +225,40 @@ const handleFocus = () => {
 
 ### Armazenar um valor entre renderizações:
 
+Neste caso, o useRef vai servir para armazenar os valores entre renderizações da atualização de cada segundo do timer.
+
+```
+const [count, setCount] = useState(0); 
+  const countRef = useRef(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      countRef.current += 1; 
+      setCount(countRef.current); 
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+```
+Ao mudar a variável 'count', o componente vai renderizar novamente e mesmo assim, o valor do useRef será mantido.
+
+### Armazenando intervalos e timeouts:
+
+No exemplo, o userRef vai armazenar referências de intervalos num cronômetro.
+
+```
+const intervalRef = useRef<number | null>(null);
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setTime(prevTime => prevTime + 1);
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current); 
+      }
+    };
+  }, []);
+```
