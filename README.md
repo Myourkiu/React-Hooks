@@ -262,3 +262,35 @@ const intervalRef = useRef<number | null>(null);
     };
   }, []);
 ```
+Neste caso, o intervalo está sendo armazenado dentro de um ref, mesmo após as renderizações.
+<br/>
+<br/>
+
+# Algoritmo de Reconciliação no React
+
+**Sugestão:** Ler a documentação oficial de [Reconciliação no React](https://pt-br.legacy.reactjs.org/docs/reconciliation.html) para informações mais precisas e certas sobre esta parte.
+
+### O que é Renderização?
+É um processo de três etapas, onde na primeira etapa, o HTML é criado. Na segunda etapa, verifica se existe uma diferença entre o HTML anterior e o atual (se não for a primeira vez que o componente está rodando). Na terceira etapa, caso exista mudanças percebidas na etapa anterior, aplica o algoritmo de renderização.
+
+### Como funciona a Reconciliação?
+
+É importante saber como funciona a segunda etapa de renderização mais precisamente. O React possui uma versão do que está exibido em tela e uma versão chamada de 'Virtual DOM', onde estão as mudanças feitas a partir do HTML anterior.
+
+O algoritmo de reconciliação vai aplicar o que é chamado de 'diffing', que é a análise entre o DOM atual e o Virtual DOM. Caso exista uma diferença entre as duas árvores, esse algoritmo vai trocar apenas o que foi alterado, ao invés de destruir e recriar a parte modificada.
+
+Exemplo:
+
+```
+//DOM anterior
+<div className="bg-green-500"></div>
+
+//DOM atual
+<div className="bg-red-500"></div>
+```
+
+Ao chegar no diffing, vai ser percebido que ambas divs são iguais, o que mudou foi apenas a cor da div, logo a única coisa que irá ser destruído e replicado com as alterações vai ser a palavra 'green', que será trocado por 'red', sem a necessidade de destruir a div por inteiro e substituir para a nova.
+
+### Por que saber como funciona a Renderização?
+
+Esta etapa é importante para saber quando usar cada hook, principalmente o useMemo e useCallback, pois são hooks visados para a performance. O problema destes hooks, é que se aplicados errôneamente, podem causar atrasos na aplicação ao invés de otimizar.
