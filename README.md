@@ -294,3 +294,55 @@ Ao chegar no diffing, vai ser percebido que ambas divs são iguais, o que mudou 
 ### Por que saber como funciona a Renderização?
 
 Esta etapa é importante para saber quando usar cada hook, principalmente o useMemo e useCallback, pois são hooks visados para a performance. O problema destes hooks, é que se aplicados errôneamente, podem causar atrasos na aplicação ao invés de otimizar.
+
+## useMemo
+
+O useMemo é um hook de performance, onde ele evita re-cálculos desnecessários no seu código com base em uma depedência.
+
+### Explicação da sintaxe:
+Dentro do escopo do useMemo, retornará a função que vai ser executada e no array, a dependência com a qual vai ser disparada a função.
+```
+useMemo(() => {
+  return () => void
+}, [])
+```
+### Exemplificando seu uso:
+Neste exemplo, supondo que tenha uma lista de itens e tenha uma função de adicionar itens nela.
+
+```
+(...)
+
+const [list, setList] = useState<string[]>([]);
+const [newItem, setNewItem] = useState<string>('');
+
+function addItemToList(){
+  setList([...list, newItem])
+}
+
+return(
+(...)
+  <input onChange={e => setNewItem(e.target.value) }value={newItem}/>
+
+  <button onClick={addItemToList}>Add Item</button>
+)
+```
+Suponha que precise ter um filtro de items que possuam a letra 'a'.
+
+```
+const itemsWithA = list.filter(item => item.includes('a'));
+```
+
+Porém, como está vinculado a um useState, todas as vezes que o usuário digitar algo ou adicionar um item na lista, o componente vai re-renderizar, fazendo o cálculo novamente.
+
+Caso a lista seja grande, ao ficar re-renderizando consecutivamente o componente, irá ter perda de performance na aplicação. Para evitar isso, basta adicionar o useMemo.
+
+```
+const itemsWithA = useMemo(() => {
+  return list.filter(item => item.includes('a'));
+},[list])
+```
+Agora a função só será chamada quando a lista tiver alguma alteração, pois o useMemo vai ficar escutando a lista para ver se ela possui alguma alteração entre a lista anterior e a lista em Virtual DOM.
+
+### Por que não utilizar o useMemo em todos os componentes?
+
+Como foi falado, o useMemo efetua uma comparação entre a dependência anterior e a que está em Virtual DOM. Porém, em cálculos simples, não há necessidade de fazer essa comparação, pois possibilidade da re-renderização ser mais rápida do que a comparação em si é grande. Ou seja, provavelmente a utilização do useMemo nesses casos causará perda de performance.
