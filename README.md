@@ -295,6 +295,38 @@ Ao chegar no diffing, vai ser percebido que ambas divs são iguais, o que mudou 
 
 Esta etapa é importante para saber quando usar cada hook, principalmente o useMemo e useCallback, pois são hooks visados para a performance. O problema destes hooks, é que se aplicados errôneamente, podem causar atrasos na aplicação ao invés de otimizar.
 
+# Shallow Compare
+### O que é Shallow Compare?
+É a técnica que o React usa na comparação de objetos e arrays em que apenas os valores das referências de suas props são comparados. Ou seja, basicamente, se a referência de um objeto ou array dentro de uma estrutura mudar, o React vai entender que o objeto inteiro mudou, mesmo que o conteúdo interno seja o mesmo.
+
+### Exemplificando o Shallow Compare
+
+```
+const objA = { name: 'Anna' };
+const objB = { name: 'Anna' };
+
+console.log(objA === objB); // false
+```
+Isso acontece pois, mesmo que os dois objetos tenham uma prop name com o mesmo valor, a comparação === resulta em false, já que ambos possuem espaços diferentes na memória, ou seja, referências diferentes. Isso é o Shallow Comparison.
+
+Caso o código seja montado da seguinte forma:
+
+```
+const objA = { name: 'Anna' };
+const objB = objA;
+
+console.log(objA === objB); // true
+```
+Agora o resultado da comparação é true, pois apontam para a mesma referência.
+
+### Relação com o useMemo e useCallback
+
+Ambos dependem do Shallow Compare para decidirem se irão recalcular ou não. As dependências passadas são comparadas pelo Shallow Comparison e, caso uma referência delas mude, o hook vai ser executado novamente.
+
+### Qual a sua importância?
+
+Ele é importante para saber como e quando otimizar seu código, evitando que os componentes seja re-renderizados desnecessariamente.
+
 ## useMemo
 
 O useMemo é um hook de performance, onde ele evita re-cálculos desnecessários no seu código com base em uma depedência.
