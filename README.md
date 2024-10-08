@@ -327,6 +327,8 @@ Ambos dependem do Shallow Compare para decidirem se irão recalcular ou não. As
 
 Ele é importante para saber como e quando otimizar seu código, evitando que os componentes seja re-renderizados desnecessariamente.
 
+# Hooks de otimização
+
 ## useMemo
 
 O useMemo é um hook de performance, onde ele evita re-cálculos desnecessários no seu código com base em uma depedência.
