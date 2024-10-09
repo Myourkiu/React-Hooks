@@ -377,6 +377,53 @@ const itemsWithA = useMemo(() => {
 ```
 Agora a função só será chamada quando a lista tiver alguma alteração, pois o useMemo vai ficar escutando a lista para ver se ela possui alguma alteração entre a lista anterior e a lista em Virtual DOM.
 
-### Por que não utilizar o useMemo em todos os componentes?
+## useCallback
+O useCallback retorna uma função que só será recriada após pelo menos uma de suas dependências mudar, útil para evitar a recriação de funções desnecessárias.
 
-Como foi falado, o useMemo efetua uma comparação entre a dependência anterior e a que está em Virtual DOM. Porém, em cálculos simples, não há necessidade de fazer essa comparação, pois possibilidade da re-renderização ser mais rápida do que a comparação em si é grande. Ou seja, provavelmente a utilização do useMemo nesses casos causará perda de performance.
+### Explicação da sintaxe:
+Dentro do escopo, retornará a função que será memorizada e um array de dependências.
+
+```const memorizedFunction = useCallback(() => {
+  return () => void
+},[])
+```
+### Exemplificando seu uso:
+
+Neste exemplo, supondo que tenha uma função de dobrar o valor do contador.
+
+```
+const Buttons = () => {
+  const [count, setCount] = useState(0);
+
+  const doubleCount = () => {
+    setCount(count * 2);
+  };
+
+  return (
+    (...)
+      <button onClick={() => setCount(count + 1)}>
+        +1
+      </button>
+      
+      <button onClick={doubleCount}>Double Count</button>
+
+    (...)
+  );
+};
+```
+
+Neste caso, toda vez que o componente pai renderizasse, a função doubleCount seria recriada, causando renderizações desnecessárias.
+
+Para evitar isso, adicionaria o useCallBack na função doubleCount.
+
+```
+const doubleCount = useCallback(() => {
+    setCount((prevCount) => prevCount * 2);
+}, [count]);
+```
+
+Agora com a função doubleCount memorizada, só será recriada apenas na mudança do count.
+
+## Por que não usar o useMemo e useCallback em todos os casos?
+
+ Ambos efetuam uma comparação entre a dependência anterior e a que está em Virtual DOM. Porém, em casos simples, não há necessidade de fazer essa comparação, pois possibilidade da re-renderização ser mais rápida do que a comparação em si é grande. Ou seja, provavelmente o custo da memorização seria maior do que simplesmente recriar a função.
